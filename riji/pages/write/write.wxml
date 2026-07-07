@@ -1,0 +1,50 @@
+<view class="write-page">
+  <view class="date-header">
+    <view class="date-text">{{dateStr}}</view>
+    <view class="weekday">{{weekday}}</view>
+  </view>
+
+  <view class="card">
+    <textarea
+      value="{{content}}"
+      placeholder="记录今天的收获、感悟..."
+      bindinput="onTextareaChange"
+      auto-height
+      maxlength="5000"
+    />
+    <view class="char-count mt-8">{{charCount}}/5000</view>
+  </view>
+
+  <view class="card">
+    <!-- Inlined from /components/tag-input/tag-input -->
+    <view class="tag-input">
+      <view class="tag-input-label">标签</view>
+      <view class="tag-list">
+        <view class="tag tag-removable" wx:for="{{tags}}" wx:key="*this" bindtap="onRemoveTag" data-tag="{{item}}">
+          {{item}} ✕
+        </view>
+      </view>
+      <view class="preset-label">点击添加预设标签</view>
+      <view class="preset-grid">
+        <view
+          wx:for="{{presetTags}}"
+          wx:key="*this"
+          class="preset-item {{tags.indexOf(item) > -1 ? 'active' : ''}}"
+          data-tag="{{item}}"
+          bindtap="onTogglePreset"
+        >{{item}}</view>
+      </view>
+      <input
+        class="custom-tag-input"
+        value="{{inputValue}}"
+        placeholder="输入自定义标签，回车确认"
+        bindinput="onInputChange"
+        bindconfirm="onInputConfirm"
+      />
+    </view>
+  </view>
+
+  <view class="action-bar">
+    <button type="primary" class="btn-save" bindtap="onSave">保存</button>
+  </view>
+</view>

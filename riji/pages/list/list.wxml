@@ -1,0 +1,143 @@
+<view class="page">
+  <!-- 总结 -->
+  <view class="section">
+    <view class="section-header" bindtap="onToggleSummary">
+      <text>📖 总结 ({{entries.length}})</text>
+      <text class="arrow {{summaryExpanded ? 'open' : ''}}">›</text>
+    </view>
+    <view wx:if="{{summaryExpanded}}">
+      <view wx:if="{{entries.length === 0}}" class="section-empty">暂无日记</view>
+      <view wx:for="{{entries}}" wx:key="date" class="list-item" data-date="{{item.date}}" bindtap="onEntryTap">
+        <view class="item-body">
+          <text class="item-title">{{item.dateLabel}} {{item.weekday}}</text>
+          <text class="item-meta">{{item.preview}} · {{item.charCount}}字</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 身体 -->
+  <view class="section">
+    <view class="section-header" bindtap="onToggleBody">
+      <text>🏃 身体 ({{bodies.length}})</text>
+      <text class="arrow {{bodyExpanded ? 'open' : ''}}">›</text>
+    </view>
+    <view wx:if="{{bodyExpanded}}">
+      <view wx:if="{{bodies.length === 0}}" class="section-empty">暂无记录</view>
+      <view wx:for="{{bodies}}" wx:key="id" class="list-item">
+        <view class="item-body">
+          <text class="item-title">{{item.weight}}kg · {{item.exercise}} {{item.duration}}min</text>
+          <text class="item-meta">{{item.date}}</text>
+        </view>
+        <text class="item-del" data-type="body" data-id="{{item.id}}" bindtap="onDeleteItem">🗑️</text>
+      </view>
+      <view class="section-add" bindtap="onAddBody">+ 添加记录</view>
+    </view>
+  </view>
+
+  <!-- 备忘 -->
+  <view class="section">
+    <view class="section-header" bindtap="onToggleMemos">
+      <text>📝 备忘 ({{memos.length}})</text>
+      <text class="arrow {{memosExpanded ? 'open' : ''}}">›</text>
+    </view>
+    <view wx:if="{{memosExpanded}}">
+      <view wx:if="{{memos.length === 0}}" class="section-empty">暂无备忘</view>
+      <view wx:for="{{memos}}" wx:key="id" class="list-item" data-id="{{item.id}}" bindtap="onEditMemo">
+        <view class="item-body">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-meta">{{item.content}}</text>
+        </view>
+        <text class="item-del" data-type="memo" data-id="{{item.id}}" catchtap="onDeleteItem">🗑️</text>
+      </view>
+      <view class="section-add" bindtap="onAddMemo">+ 添加备忘</view>
+    </view>
+  </view>
+
+  <!-- 待办 -->
+  <view class="section">
+    <view class="section-header" bindtap="onToggleTodos">
+      <text>📋 待办 ({{todos.length}})</text>
+      <text class="arrow {{todosExpanded ? 'open' : ''}}">›</text>
+    </view>
+    <view wx:if="{{todosExpanded}}">
+      <view wx:if="{{todos.length === 0}}" class="section-empty">暂无待办</view>
+      <view wx:for="{{todos}}" wx:key="id" class="list-item">
+        <view class="checkbox {{item.done ? 'checked' : ''}}" data-id="{{item.id}}" bindtap="onToggleTodoDone">{{item.done ? '✓' : ''}}</view>
+        <view class="item-body" data-id="{{item.id}}" bindtap="onEditTodo">
+          <text class="item-title {{item.done ? 'done' : ''}}">{{item.title}}</text>
+          <text wx:if="{{item.deadline}}" class="item-meta">{{item.deadline}}</text>
+        </view>
+        <text class="item-del" data-type="todo" data-id="{{item.id}}" bindtap="onDeleteItem">🗑️</text>
+      </view>
+      <view class="section-add" bindtap="onAddTodo">+ 添加待办</view>
+    </view>
+  </view>
+
+  <!-- Todo Popup -->
+  <view wx:if="{{showTodoPopup}}" class="popup-mask" bindtap="onCloseTodoPopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-title">{{todoEditingId ? '编辑待办' : '添加待办'}}</view>
+      <input class="form-input" value="{{todoFormTitle}}" placeholder="标题" bindinput="onTodoTitleInput"/>
+      <picker mode="date" value="{{todoFormDeadline}}" bindchange="onTodoDateChange">
+        <view class="form-input">{{todoFormDeadline || '选择截止日期（可选）'}}</view>
+      </picker>
+      <input class="form-input" value="{{todoFormNote}}" placeholder="备注（可选）" bindinput="onTodoNoteInput"/>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCloseTodoPopup">取消</button>
+        <button class="btn-save" bindtap="onSaveTodo">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Memo Popup -->
+  <view wx:if="{{showMemoPopup}}" class="popup-mask" bindtap="onCloseMemoPopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-title">{{memoEditingId ? '编辑备忘' : '添加备忘'}}</view>
+      <input class="form-input" value="{{memoFormTitle}}" placeholder="标题" bindinput="onMemoTitleInput"/>
+      <textarea class="form-input" value="{{memoFormContent}}" placeholder="内容" bindinput="onMemoContentInput" auto-height/>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCloseMemoPopup">取消</button>
+        <button class="btn-save" bindtap="onSaveMemo">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Body Popup -->
+  <view wx:if="{{showBodyPopup}}" class="popup-mask" bindtap="onCloseBodyPopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-title">添加身体记录</view>
+      <view class="form-label">体重(kg)</view>
+      <input class="form-input" type="digit" value="{{bodyFormWeight}}" placeholder="0.0" bindinput="onBodyWeightInput"/>
+      <view class="form-label">运动</view>
+      <view class="cat-row">
+        <view wx:for="{{exerciseTypes}}" wx:key="name" class="cat-item {{bodyFormExercise === item.name ? 'active' : ''}}" data-name="{{item.name}}" bindtap="onBodyExerChange">
+          <text>{{item.emoji}}</text>
+        </view>
+      </view>
+      <view class="form-label">时长(分钟)</view>
+      <input class="form-input" type="number" value="{{bodyFormDuration}}" placeholder="0" bindinput="onBodyDurationInput"/>
+      <view class="form-label">备注</view>
+      <input class="form-input" value="{{bodyFormNote}}" placeholder="可选" bindinput="onBodyNoteInput"/>
+      <view class="form-label">日期</view>
+      <picker mode="date" value="{{bodyFormDate}}" bindchange="onBodyDateChange">
+        <view class="form-input">{{bodyFormDate}}</view>
+      </picker>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCloseBodyPopup">取消</button>
+        <button class="btn-save" bindtap="onSaveBody">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Delete Dialog -->
+  <view wx:if="{{showDeleteDialog}}" class="popup-mask" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">确认删除？</text>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-save" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+</view>

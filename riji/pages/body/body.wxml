@@ -1,0 +1,179 @@
+
+<view class="body-page">
+
+  <!-- 体重记录 -->
+  <view class="weight-log-section">
+    <view class="section-title">体重记录</view>
+    <view class="weight-log-list">
+      <block wx:if="{{weightLogs.length > 0}}">
+        <view
+          wx:for="{{weightLogs}}"
+          wx:key="date"
+          class="weight-log-item"
+        >
+          <view class="weight-log-left">
+            <text class="weight-log-date">{{item.date}}</text>
+            <text class="weight-log-kg">{{item.weight}} kg</text>
+          </view>
+          <view class="weight-log-right">
+            <text class="weight-log-exer">{{item.emoji}} {{item.exercise}}</text>
+            <text class="weight-log-duration">{{item.duration}}分钟</text>
+          </view>
+        </view>
+      </block>
+      <view class="weight-log-empty" wx:else>
+        <text>暂无体重记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="section-title">记录</view>
+  <view class="record-list">
+    <block wx:if="{{groupedRecords.length > 0}}">
+      <view wx:for="{{groupedRecords}}" wx:key="date" class="date-group">
+        <view class="date-group-header">
+          <text class="date-group-date">{{item.date}}</text>
+        </view>
+        <view
+          wx:for="{{item.items}}"
+          wx:for-item="record"
+          wx:for-index="idx"
+          wx:key="id"
+          class="body-card"
+          data-id="{{record.id}}"
+          bindtap="onEdit"
+          bindlongpress="onDelete"
+        >
+          <view class="body-card-top">
+            <view class="body-weight">
+              <text class="weight-value">{{record.weight}}</text>
+              <text class="weight-unit">kg</text>
+            </view>
+            <view class="body-exercise">
+              <text class="exer-emoji">{{record.exerciseEmoji}}</text>
+              <text class="exer-name">{{record.exercise}}</text>
+              <text class="exer-duration">{{record.durationLabel}}</text>
+            </view>
+          </view>
+          <view class="body-card-note" wx:if="{{record.note}}">
+            <text>{{record.note}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">💪</view>
+      <view class="empty-text">还没有记录</view>
+      <view class="empty-hint">点击右下角 + 开始记录吧</view>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-fab" bindtap="onAdd">
+    <text class="fab-icon">+</text>
+  </view>
+
+  <!-- 添加/编辑弹窗 -->
+  <view class="popup-mask" wx:if="{{showPopup}}" bindtap="onClosePopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-bar"></view>
+      <view class="popup-header">
+        <text class="popup-title">{{editingId ? '编辑记录' : '添加记录'}}</text>
+        <view class="popup-close" bindtap="onClosePopup">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="form-body">
+        <!-- 体重 -->
+        <view class="form-item">
+          <view class="form-label">体重 (kg)</view>
+          <view class="weight-input-wrap">
+            <input
+              class="weight-input"
+              type="digit"
+              value="{{formWeight}}"
+              placeholder="0.0"
+              bindinput="onWeightInput"
+            />
+            <text class="weight-input-unit">kg</text>
+          </view>
+        </view>
+
+        <!-- 运动类型 -->
+        <view class="form-item">
+          <view class="form-label">运动类型</view>
+          <view class="exercise-picker">
+            <view
+              wx:for="{{exerciseTypes}}"
+              wx:key="name"
+              class="exer-option {{formExercise === item.name ? 'exer-active' : ''}}"
+              data-name="{{item.name}}"
+              bindtap="onExerChange"
+              data-idx="{{index}}"
+            >
+              <text class="exer-option-emoji">{{item.emoji}}</text>
+              <text class="exer-option-name">{{item.name}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 时长 -->
+        <view class="form-item">
+          <view class="form-label">时长 (分钟)</view>
+          <view class="duration-input-wrap">
+            <input
+              class="duration-input"
+              type="number"
+              value="{{formDuration}}"
+              placeholder="0"
+              bindinput="onDurationInput"
+            />
+            <text class="duration-input-unit">分钟</text>
+          </view>
+        </view>
+
+        <!-- 备注 -->
+        <view class="form-item">
+          <view class="form-label">备注</view>
+          <view class="note-input-wrap">
+            <input
+              class="note-input"
+              value="{{formNote}}"
+              placeholder="可选备注"
+              bindinput="onNoteInput"
+            />
+          </view>
+        </view>
+
+        <!-- 日期 -->
+        <view class="form-item">
+          <view class="form-label">日期</view>
+          <picker mode="date" value="{{formDate}}" bindchange="onDateChange">
+            <view class="date-picker-btn">{{formDate}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onClosePopup">取消</button>
+        <button class="btn-save" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 删除确认 -->
+  <view class="dialog-mask" wx:if="{{showDeleteDialog}}" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <view class="dialog-icon">🗑️</view>
+      <view class="dialog-title">确认删除</view>
+      <view class="dialog-content">确定要删除这条记录吗？</view>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-delete" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+
+</view>

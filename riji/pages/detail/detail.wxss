@@ -1,0 +1,48 @@
+.detail-page { padding-bottom: 40px; }
+
+.mood-display { font-size: 48px; text-align: center; padding: var(--spacing-md); }
+
+.entry-content { }
+
+.entry-text { font-size: var(--font-md); line-height: 1.8; color: var(--color-text); white-space: pre-wrap; word-break: break-all; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+
+.tag { display: inline-block; background: #e8f4f0; color: #2c3e3e; font-size: 12px; padding: 2px 8px; border-radius: 6px; }
+
+.entry-meta { font-size: var(--font-xs); color: var(--color-text-muted); }
+
+/* habit checklist */
+.habit-checklist { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.habit-check-item { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) 0; }
+.habit-check-item.checked { }
+.habit-check-item.checked .check-name { color: var(--color-text-muted); }
+.check-box { font-size: 18px; }
+.check-icon { font-size: 18px; }
+.check-name { font-size: var(--font-sm); color: var(--color-text); }
+
+/* todo */
+.todo-item { padding: var(--spacing-sm) 0; font-size: var(--font-sm); }
+
+/* action bar */
+.action-bar { display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg); padding: 0 var(--spacing-md); }
+.action-bar button { flex: 1; }
+
+.btn-danger { background: #e34d59; color: #fff; }
+
+/* dialog */
+.dialog-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.dialog-box {
+  background: #fff; border-radius: 12px; width: 300px; padding: 24px 20px 16px;
+}
+.dialog-title { font-size: 17px; font-weight: 600; color: var(--color-text); margin-bottom: 12px; text-align: center; }
+.dialog-content { font-size: var(--font-sm); color: var(--color-text-muted); margin-bottom: 20px; text-align: center; }
+.dialog-actions { display: flex; gap: 12px; }
+.dialog-btn { flex: 1; font-size: var(--font-sm); border-radius: 8px; padding: 8px 0; }
+.dialog-btn-cancel { background: #f5f5f5; color: var(--color-text); }
+.dialog-btn-confirm { background: #e34d59; color: #fff; }

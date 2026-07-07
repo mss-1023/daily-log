@@ -1,0 +1,118 @@
+<view class="memorial-page">
+  <!-- Memorial List -->
+  <view class="memorial-list">
+    <block wx:if="{{memorials.length > 0}}">
+      <view
+        class="memorial-card card scale-in"
+        wx:for="{{memorials}}"
+        wx:key="id"
+        bindtap="onEdit"
+        data-id="{{item.id}}"
+        bindlongpress="onDelete"
+      >
+        <view class="memorial-card-left">
+          <view class="memorial-type-icon">{{item.type === 'birthday' ? '🎂' : item.type === 'anniversary' ? '💍' : '📅'}}</view>
+        </view>
+        <view class="memorial-card-body">
+          <view class="memorial-title">{{item.title}}</view>
+          <view class="memorial-date">{{item.date}}</view>
+          <view class="memorial-note" wx:if="{{item.note}}">{{item.note}}</view>
+        </view>
+        <view class="memorial-card-right">
+          <view class="memorial-countdown {{item.countdownDays === 0 ? 'today' : item.countdownDays > 0 ? 'upcoming' : 'past'}}">{{item.countdownText}}</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- Empty State -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">📅</view>
+      <view class="empty-text">还没有纪念日，记录重要的日子吧</view>
+    </view>
+  </view>
+
+  <!-- FAB Add Button -->
+  <view class="add-fab" bindtap="onAdd">
+    <text class="fab-icon">+</text>
+  </view>
+
+  <!-- Add / Edit Popup -->
+  <view class="popup-mask" wx:if="{{showPopup}}" bindtap="onClosePopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-bar"></view>
+      <view class="popup-header">
+        <text class="popup-title">{{editingMemorial ? '编辑纪念日' : '添加纪念日'}}</text>
+        <view class="popup-close" bindtap="onClosePopup">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="form-body">
+        <view class="form-item">
+          <view class="form-label">名称</view>
+          <input
+            class="form-input"
+            value="{{formTitle}}"
+            placeholder="输入纪念日名称"
+            bindinput="onTitleInput"
+          />
+        </view>
+        <view class="form-item">
+          <view class="form-label">日期</view>
+          <picker mode="date" value="{{formDate}}" bindchange="onDateChange">
+            <view class="form-input date-picker-input">
+              <text>{{formDate || '选择日期'}}</text>
+              <text class="date-picker-arrow">📅</text>
+            </view>
+          </picker>
+        </view>
+        <view class="form-item">
+          <view class="form-label">类型</view>
+          <view class="segmented-control">
+            <view
+              class="segment {{formType === 'birthday' ? 'active' : ''}}"
+              data-value="birthday"
+              bindtap="onTypeChange"
+            >🎂 生日</view>
+            <view
+              class="segment {{formType === 'anniversary' ? 'active' : ''}}"
+              data-value="anniversary"
+              bindtap="onTypeChange"
+            >💍 纪念日</view>
+            <view
+              class="segment {{formType === 'other' ? 'active' : ''}}"
+              data-value="other"
+              bindtap="onTypeChange"
+            >📅 其他</view>
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-label">备注</view>
+          <textarea
+            class="form-textarea"
+            value="{{formNote}}"
+            placeholder="添加备注（可选）"
+            bindinput="onNoteInput"
+            auto-height
+          />
+        </view>
+      </view>
+      <view class="form-actions">
+        <button class="btn-cancel" size="medium" bindtap="onClosePopup">取消</button>
+        <button class="btn-save" size="medium" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Delete Dialog -->
+  <view class="dialog-mask" wx:if="{{showDeleteDialog}}" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <view class="dialog-icon">🗑️</view>
+      <view class="dialog-title">确认删除</view>
+      <view class="dialog-content">确定要删除这个纪念日吗？此操作不可撤销。</view>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-delete" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+</view>

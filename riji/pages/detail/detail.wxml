@@ -1,0 +1,74 @@
+<view class="detail-page">
+  <view class="date-header">
+    <view class="date-text">{{dateStr}}</view>
+    <view class="weekday">{{weekday}}</view>
+  </view>
+
+  <!-- Mood -->
+  <view wx:if="{{mood}}" class="card">
+    <view class="section-title">今日心情</view>
+    <view class="mood-display">{{mood}}</view>
+  </view>
+
+  <!-- Entry -->
+  <view class="card">
+    <view class="section-title">日总结</view>
+    <view wx:if="{{entry}}" class="entry-content">
+      <view class="entry-text">{{entry.content}}</view>
+      <view wx:if="{{entry.tags.length > 0}}" class="tag-row mt-8">
+        <view class="tag" wx:for="{{entry.tags}}" wx:key="*this">{{item}}</view>
+      </view>
+      <view class="entry-meta mt-8">
+        <text>{{entry.content.length}}字</text>
+      </view>
+    </view>
+    <view wx:else class="empty-state">
+      <view class="icon">📝</view>
+      <view class="text">暂无总结</view>
+    </view>
+  </view>
+
+  <!-- Habits -->
+  <view wx:if="{{habitDefs.length > 0}}" class="card">
+    <view class="section-title">习惯打卡</view>
+    <view class="habit-checklist">
+      <view
+        wx:for="{{habitDefs}}"
+        wx:key="id"
+        class="habit-check-item {{habits[item.id] ? 'checked' : ''}}"
+        data-habit-id="{{item.id}}"
+        bindtap="onToggleHabit"
+      >
+        <view class="check-box">{{habits[item.id] ? '✅' : '⬜'}}</view>
+        <text class="check-icon">{{item.icon}}</text>
+        <text class="check-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Todos -->
+  <view wx:if="{{todos.length > 0}}" class="card">
+    <view class="section-title">当日待办</view>
+    <view wx:for="{{todos}}" wx:key="id" class="todo-item {{item.done ? 'done' : ''}}">
+      <text>{{item.done ? '✅' : '⬜'}} {{item.title}}</text>
+    </view>
+  </view>
+
+  <!-- Actions -->
+  <view class="action-bar">
+    <button type="primary" bindtap="onContinueWrite">续写</button>
+    <button class="btn-danger" bindtap="onDelete">删除</button>
+  </view>
+
+  <!-- Delete dialog -->
+  <view wx:if="{{showDeleteDialog}}" class="dialog-mask" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <view class="dialog-title">确认删除</view>
+      <view class="dialog-content">确定要删除 {{dateStr}} 的日总结吗？</view>
+      <view class="dialog-actions">
+        <button class="dialog-btn dialog-btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="dialog-btn dialog-btn-confirm" bindtap="onConfirmDelete">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

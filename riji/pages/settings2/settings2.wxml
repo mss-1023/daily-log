@@ -1,0 +1,89 @@
+<view class="page">
+  <view class="section-title">存储</view>
+  <view class="card">
+    <view class="storage-row">
+      <text>已用 {{usedKB}}KB / {{limitKB}}KB ({{usagePercent}}%)</text>
+    </view>
+    <progress percent="{{usagePercent}}" stroke-width="6" activeColor="#2c3e3e" backgroundColor="#e8e8e8"/>
+  </view>
+
+  <view class="section-title">数据管理</view>
+  <view class="card setting-list">
+    <view class="setting-row" bindtap="onExport">
+      <text>📤 导出数据</text><text class="arrow">›</text>
+    </view>
+    <view class="setting-row" bindtap="onImport">
+      <text>📥 导入数据</text><text class="arrow">›</text>
+    </view>
+    <view class="setting-row" bindtap="onShowArchive">
+      <text>📦 归档旧数据</text><text class="arrow">›</text>
+    </view>
+    <view class="setting-row danger" bindtap="onClearData">
+      <text>🗑️ 清空所有数据</text><text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="section-title">关于</view>
+  <view class="card setting-list">
+    <view class="setting-row" bindtap="onAbout">
+      <text>ℹ️ 关于日迹</text><text class="arrow">›</text>
+    </view>
+  </view>
+
+  <!-- Import dialog -->
+  <view wx:if="{{showImportDialog}}" class="popup-mask" bindtap="onCloseImportDialog">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-title">导入数据</view>
+      <view class="form-label">粘贴JSON或从文件导入</view>
+      <textarea class="form-input" value="{{importJsonText}}" placeholder="粘贴JSON..." bindinput="onImportJsonInput" auto-height/>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCloseImportDialog">取消</button>
+        <button class="btn-save" bindtap="onFileImport">从文件</button>
+        <button class="btn-save" bindtap="onPasteImport">粘贴导入</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Clear dialog -->
+  <view wx:if="{{showClearDialog}}" class="popup-mask" bindtap="onCancelClear">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">清空所有数据</text>
+      <view class="form-label">输入"确认清空"以继续</view>
+      <input class="form-input" value="{{clearConfirmText}}" placeholder="确认清空" bindinput="onClearInput"/>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelClear">取消</button>
+        <button class="btn-delete" bindtap="onConfirmClear">清空</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Archive dialog -->
+  <view wx:if="{{showArchiveDialog}}" class="popup-mask" bindtap="onCloseArchiveDialog">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">归档年份</text>
+      <picker mode="selector" range="{{archiveYears}}" bindchange="onPickArchiveYear">
+        <view class="form-input">{{selectedArchiveYear || '选择年份'}}</view>
+      </picker>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCloseArchiveDialog">取消</button>
+        <button class="btn-save" bindtap="onConfirmArchive">归档</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- About dialog -->
+  <view wx:if="{{showAboutDialog}}" class="popup-mask" bindtap="onCloseAbout">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">关于日迹</text>
+      <view class="about-content">
+        <text>版本: 2.0</text>
+        <text>框架: 微信小程序原生</text>
+        <text>存储: 本地 (上限10MB)</text>
+        <text>隐私: 数据仅存本地，不上传</text>
+      </view>
+      <view class="dialog-actions">
+        <button class="btn-save" bindtap="onCloseAbout">知道了</button>
+      </view>
+    </view>
+  </view>
+</view>

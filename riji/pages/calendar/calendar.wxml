@@ -1,0 +1,68 @@
+<view class="calendar-page">
+  <!-- Inlined from /components/calendar/calendar -->
+  <view class="calendar-comp">
+    <view class="date-header">
+      <view class="arrow" bindtap="onPrevMonth">←</view>
+      <view class="date-text">{{months[1].y}}年{{months[1].m}}月</view>
+      <view class="arrow" bindtap="onNextMonth">→</view>
+    </view>
+
+    <view class="calendar-weekdays">
+      <view wx:for="{{weekHeaders}}" wx:key="*this" class="weekday-cell">{{item}}</view>
+    </view>
+
+    <swiper
+      class="calendar-swiper"
+      current="{{swiperCurrent}}"
+      bindchange="onSwiperChange"
+      duration="300"
+      circular
+    >
+      <swiper-item wx:for="{{months}}" wx:key="ym">
+        <view class="calendar-grid">
+          <view wx:for="{{item.weeks}}" wx:for-item="week" wx:key="index" class="calendar-row">
+            <view
+              wx:for="{{week}}"
+              wx:for-item="cell"
+              wx:key="index"
+              class="calendar-cell {{!cell.day ? 'empty' : ''}}"
+              data-ym="{{item.ym}}"
+              data-day="{{cell.day}}"
+              bindtap="onCalendarDayTap"
+            >
+              <view wx:if="{{cell.day}}" class="day-inner {{cell.isToday ? 'today' : ''}}">
+                <text>{{cell.day}}</text>
+                <view wx:if="{{cell.hasDot}}" class="day-dot"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- Stats -->
+  <view class="card">
+    <view class="section-title">{{ymStr}} 统计</view>
+    <view class="stats-grid">
+      <view class="stats-item">
+        <view class="stats-num">{{monthEntryDays}}</view>
+        <view class="stats-desc">记录天数</view>
+      </view>
+      <view class="stats-item">
+        <view class="stats-num">{{monthTotalWords}}</view>
+        <view class="stats-desc">总字数</view>
+      </view>
+      <view class="stats-item">
+        <view class="stats-num">{{habitCompletionRate}}</view>
+        <view class="stats-desc">习惯完成率</view>
+      </view>
+    </view>
+    <view wx:if="{{moodDisplay.length > 0}}" class="mood-dist mt-8">
+      <text class="stats-desc">心情分布：</text>
+      <block wx:for="{{moodDisplay}}" wx:key="emoji">
+        <text>{{item.emoji}}x{{item.count}} </text>
+      </block>
+    </view>
+  </view>
+</view>

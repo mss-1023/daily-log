@@ -1,0 +1,66 @@
+<view class="mine-page">
+
+  <!-- User greeting -->
+  <view class="user-header">
+    <view class="avatar">🐱</view>
+    <view class="user-greeting-block">
+      <view class="user-greeting">你好</view>
+      <view class="user-date">{{todayDate}}</view>
+    </view>
+    <view class="header-settings" bindtap="onNavSettings">⚙️</view>
+  </view>
+
+  <!-- Backup tip -->
+  <view wx:if="{{showBackupTip}}" class="backup-tip">
+    <text>⚠️ 已超过30天未备份，建议导出数据</text>
+  </view>
+
+  <!-- Stats cards -->
+  <view class="stats-row">
+    <view class="stat-card">
+      <view class="stat-icon">🔥</view>
+      <view class="stat-value">{{streakDays}}</view>
+      <view class="stat-label">连续</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-icon">📅</view>
+      <view class="stat-value">{{totalDays}}</view>
+      <view class="stat-label">累计</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-icon">📝</view>
+      <view class="stat-value">{{totalWords}}</view>
+      <view class="stat-label">字数</view>
+    </view>
+  </view>
+
+  <!-- Quick tools grid -->
+  <view class="tools-grid">
+    <view class="tool-card" bindtap="onNavTool" data-url="/pages/calendar/calendar">
+      <view class="tool-icon">📅</view>
+      <view class="tool-label">月历</view>
+    </view>
+    <view class="tool-card" bindtap="onNavTool" data-url="/pages/body/body">
+      <view class="tool-icon">🏃</view>
+      <view class="tool-label">身体</view>
+    </view>
+    <view class="tool-card" bindtap="onNavTool" data-url="/pages/reading/reading">
+      <view class="tool-icon">📚</view>
+      <view class="tool-label">读书</view>
+    </view>
+    <view class="tool-card" bindtap="onNavTool" data-url="/pages/wish/wish">
+      <view class="tool-icon">⭐</view>
+      <view class="tool-label">愿望</view>
+    </view>
+    <view class="tool-card" bindtap="onNavTool" data-url="/pages/memorial/memorial">
+      <view class="tool-icon">💝</view>
+      <view class="tool-label">纪念日</view>
+    </view>
+    <view class="tool-card" bindtap="onNavHabits">
+      <view class="tool-icon">✅</view>
+      <view class="tool-label">习惯</view>
+    </view>
+  </view>
+
+  
+</view>

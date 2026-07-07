@@ -1,0 +1,123 @@
+<view class="reading-page">
+  <!-- Book List -->
+  <view class="reading-list">
+    <block wx:if="{{readings.length > 0}}">
+      <view
+        class="reading-card card scale-in"
+        wx:for="{{readings}}"
+        wx:key="id"
+        bindtap="onEdit"
+        data-id="{{item.id}}"
+        bindlongpress="onDelete"
+      >
+        <view class="reading-card-header">
+          <view class="reading-title">{{item.title}}</view>
+          <view class="reading-status {{item.status}}">{{item.status === 'reading' ? '在读' : '已读'}}</view>
+        </view>
+        <view class="reading-author" wx:if="{{item.author}}">{{item.author}}</view>
+        <view class="reading-rating" wx:if="{{item.rating > 0}}">
+          <text wx:for="{{stars}}" wx:key="*this" class="star {{index < item.rating ? 'filled' : ''}}">★</text>
+        </view>
+        <view class="reading-notes-preview" wx:if="{{item.notes}}">{{item.notes}}</view>
+      </view>
+    </block>
+
+    <!-- Empty State -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">📚</view>
+      <view class="empty-text">还没有读书笔记，开始记录吧</view>
+    </view>
+  </view>
+
+  <!-- FAB Add Button -->
+  <view class="add-fab" bindtap="onAdd">
+    <text class="fab-icon">+</text>
+  </view>
+
+  <!-- Add / Edit Popup -->
+  <view class="popup-mask" wx:if="{{showPopup}}" bindtap="onClosePopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-bar"></view>
+      <view class="popup-header">
+        <text class="popup-title">{{editingReading ? '编辑笔记' : '添加读书笔记'}}</text>
+        <view class="popup-close" bindtap="onClosePopup">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="form-body">
+        <view class="form-item">
+          <view class="form-label">书名</view>
+          <input
+            class="form-input"
+            value="{{formTitle}}"
+            placeholder="输入书名"
+            bindinput="onTitleInput"
+          />
+        </view>
+        <view class="form-item">
+          <view class="form-label">作者</view>
+          <input
+            class="form-input"
+            value="{{formAuthor}}"
+            placeholder="输入作者（可选）"
+            bindinput="onAuthorInput"
+          />
+        </view>
+        <view class="form-item">
+          <view class="form-label">状态</view>
+          <view class="segmented-control">
+            <view
+              class="segment {{formStatus === 'reading' ? 'active' : ''}}"
+              data-value="reading"
+              bindtap="onStatusChange"
+            >在读</view>
+            <view
+              class="segment {{formStatus === 'finished' ? 'active' : ''}}"
+              data-value="finished"
+              bindtap="onStatusChange"
+            >已读</view>
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-label">评分</view>
+          <view class="rating-stars">
+            <text
+              wx:for="{{stars}}"
+              wx:key="*this"
+              class="rating-star {{index < formRating ? 'filled' : ''}}"
+              data-rating="{{index + 1}}"
+              bindtap="onRatingTap"
+            >★</text>
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-label">笔记</view>
+          <textarea
+            class="form-textarea"
+            value="{{formNotes}}"
+            placeholder="写下你的读书笔记（可选）"
+            bindinput="onNotesInput"
+            auto-height
+          />
+        </view>
+      </view>
+      <view class="form-actions">
+        <button class="btn-cancel" size="medium" bindtap="onClosePopup">取消</button>
+        <button class="btn-save" size="medium" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Delete Dialog -->
+  <view class="dialog-mask" wx:if="{{showDeleteDialog}}" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <view class="dialog-icon">🗑️</view>
+      <view class="dialog-title">确认删除</view>
+      <view class="dialog-content">确定要删除这条读书笔记吗？此操作不可撤销。</view>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-delete" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,82 @@
+<view class="page">
+  <!-- 日期头部 -->
+  <view class="date-header">
+    <view class="avatar-btn" bindtap="onGoMine">👤</view>
+    <view class="arrow" bindtap="onPrevDay">←</view>
+    <picker mode="date" value="{{date}}" start="2020-01-01" end="2030-12-31" bindchange="onPickDate">
+      <view class="date-info">
+        <text class="date-text">{{dateStr}}</text>
+        <text class="weekday">{{weekday}}</text>
+      </view>
+    </picker>
+    <view class="arrow" bindtap="onNextDay">→</view>
+  </view>
+
+  <view class="streak-badge" wx:if="{{streak > 0}}">
+    <text>🔥 连续 {{streak}} 天</text>
+  </view>
+
+  <view class="quote-card" wx:if="{{dailyQuote}}">
+    <text class="quote-text">💬 {{dailyQuote}}</text>
+  </view>
+
+  <view class="section-title">💭 心情</view>
+  <view class="mood-card">
+    <view class="mood-row">
+      <view wx:for="{{moods}}" wx:key="emoji" class="mood-item {{selectedMood === item.emoji ? 'mood-selected' : ''}}" data-emoji="{{item.emoji}}" bindtap="onMoodTap">
+        <text class="mood-emoji">{{item.emoji}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-title">✅ 习惯</view>
+  <view wx:if="{{habits.length > 0}}" class="habit-list">
+    <view wx:for="{{habits}}" wx:key="id" class="habit-item {{item.checked ? 'habit-done' : ''}}" data-id="{{item.id}}" bindtap="onHabitToggle">
+      <text class="habit-check">{{item.checked ? '☑️' : '☐'}}</text>
+      <text class="habit-icon">{{item.icon}}</text>
+      <text class="habit-name">{{item.name}}</text>
+    </view>
+  </view>
+  <view wx:else class="empty-state">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">还没有习惯，去「我的」添加吧</text>
+  </view>
+
+  <view class="section-title">📝 日总结</view>
+  <view wx:if="{{!hasEntry}}" class="card entry-card">
+    <textarea value="{{entryContent}}" placeholder="{{placeholder}}" bindinput="onEntryInput" auto-height maxlength="-1"/>
+    <view class="entry-footer">
+      <text class="char-count">{{charCount}} 字</text>
+      <view class="btn-primary btn-sm" bindtap="onSaveEntry">保存</view>
+    </view>
+  </view>
+  <view wx:else class="card entry-card">
+    <view class="content-display">{{entryContent}}</view>
+    <view class="tag-row" wx:if="{{entryTags.length > 0}}">
+      <view class="tag" wx:for="{{entryTags}}" wx:key="*this">{{item}}</view>
+    </view>
+    <view class="entry-footer">
+      <text class="char-count">{{charCount}} 字</text>
+      <view class="action-bar">
+        <view class="btn-outline btn-sm" bindtap="onContinueWrite">续写</view>
+        <view class="btn-danger btn-sm" bindtap="onDeleteEntry">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-title">📋 今日待办</view>
+  <view wx:if="{{todoItems.length === 0}}" class="empty-state">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">今天没有待办，轻松的一天 ~</text>
+  </view>
+  <view wx:else class="todo-list card">
+    <view wx:for="{{todoItems}}" wx:key="id" class="todo-row" data-id="{{item.id}}" bindtap="onTodoDone">
+      <text class="todo-check">☐</text>
+      <text class="todo-title">{{item.title}}</text>
+      <text class="todo-deadline" wx:if="{{item.deadlineLabel}}">{{item.deadlineLabel}}</text>
+    </view>
+    <view wx:if="{{showMoreTodos}}" class="todo-more" bindtap="onGoTodos">
+      <text>查看全部 →</text>
+    </view>
+  </view>
+</view>

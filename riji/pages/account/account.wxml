@@ -1,0 +1,76 @@
+<view class="page">
+  <view class="stats-card">
+    <view class="month-nav">
+      <text class="month-arrow" bindtap="onPrevMonth">←</text>
+      <picker mode="date" value="{{currentMonth + '-01'}}" fields="month" bindchange="onPickMonth">
+        <text class="month-label">{{monthLabel}} ▼</text>
+      </picker>
+      <text class="month-arrow" bindtap="onNextMonth">→</text>
+    </view>
+    <view class="stats-main">
+      <text class="stats-amount">¥{{monthlyTotal}}</text>
+    </view>
+    <view class="stats-cats">
+      <view wx:for="{{catStats}}" wx:key="name" class="cat-stat">
+        <text class="cat-stat-emoji">{{item.emoji}}</text>
+        <text class="cat-stat-amount">¥{{item.total}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{groupedRecords.length === 0}}" class="empty-state">
+    <text class="empty-icon">💰</text>
+    <text class="empty-text">还没有记账</text>
+  </view>
+
+  <view wx:for="{{groupedRecords}}" wx:key="date" class="date-group">
+    <view class="date-group-header">{{item.date}} · ¥{{item.total}}</view>
+    <view wx:for="{{item.items}}" wx:for-item="record" wx:key="id" class="record-item" data-id="{{record.id}}" bindtap="onEdit" bindlongpress="onDelete">
+      <text class="record-emoji">{{record.categoryEmoji}}</text>
+      <view class="record-body">
+        <text class="record-category">{{record.category}}</text>
+        <text class="record-note" wx:if="{{record.note}}">{{record.note}}</text>
+      </view>
+      <text class="record-amount">-¥{{record.amount}}</text>
+    </view>
+  </view>
+
+  <view class="add-fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view wx:if="{{showPopup}}" class="popup-mask" bindtap="onClosePopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-title">{{editingId ? '编辑' : '记一笔'}}</view>
+      <view class="form-body">
+        <view class="form-label">分类</view>
+        <view class="cat-row">
+          <view wx:for="{{categories}}" wx:key="name" class="cat-item {{formCategory === item.name ? 'active' : ''}}" data-name="{{item.name}}" bindtap="onCatChange">
+            <text class="cat-emoji">{{item.emoji}}</text>
+            <text class="cat-name">{{item.name}}</text>
+          </view>
+        </view>
+        <view class="form-label">金额</view>
+        <input class="form-input" type="digit" value="{{formAmount}}" placeholder="0.00" bindinput="onAmountInput"/>
+        <view class="form-label">备注</view>
+        <input class="form-input" value="{{formNote}}" placeholder="可选" bindinput="onNoteInput"/>
+        <view class="form-label">日期</view>
+        <picker mode="date" value="{{formDate}}" bindchange="onDateChange">
+          <view class="form-input">{{formDate}}</view>
+        </picker>
+      </view>
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onClosePopup">取消</button>
+        <button class="btn-save" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showDeleteDialog}}" class="popup-mask" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">确认删除？</text>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-delete" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+</view>

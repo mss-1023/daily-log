@@ -1,0 +1,119 @@
+<view class="wish-page">
+  <!-- Wish List -->
+  <view class="wish-list">
+    <block wx:if="{{wishes.length > 0}}">
+      <view
+        class="wish-card card scale-in"
+        wx:for="{{wishes}}"
+        wx:key="id"
+        bindtap="onToggle"
+        data-id="{{item.id}}"
+        bindlongpress="onDelete"
+      >
+        <view class="wish-card-left">
+          <view class="wish-priority-dot" style="background: {{item.priority === 'high' ? '#e74c3c' : item.priority === 'medium' ? '#faad14' : '#52c41a'}}"></view>
+          <view class="wish-body">
+            <view class="wish-title {{item.achieved ? 'done' : ''}}">{{item.title}}</view>
+            <view class="wish-description" wx:if="{{item.description}}">{{item.description}}</view>
+          </view>
+        </view>
+        <view class="wish-card-right">
+          <view class="wish-checkbox {{item.achieved ? 'checked' : ''}}">
+            <text wx:if="{{item.achieved}}">✓</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- Empty State -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">🌟</view>
+      <view class="empty-text">还没有愿望，写下你的心愿吧</view>
+    </view>
+  </view>
+
+  <!-- FAB Add Button -->
+  <view class="add-fab" bindtap="onAdd">
+    <text class="fab-icon">+</text>
+  </view>
+
+  <!-- Add / Edit Popup -->
+  <view class="popup-mask" wx:if="{{showPopup}}" bindtap="onClosePopup">
+    <view class="popup-form" catchtap="noop">
+      <view class="popup-bar"></view>
+      <view class="popup-header">
+        <text class="popup-title">{{editingWish ? '编辑愿望' : '添加愿望'}}</text>
+        <view class="popup-close" bindtap="onClosePopup">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="form-body">
+        <view class="form-item">
+          <view class="form-label">愿望</view>
+          <input
+            class="form-input"
+            value="{{formTitle}}"
+            placeholder="输入你的愿望"
+            bindinput="onTitleInput"
+          />
+        </view>
+        <view class="form-item">
+          <view class="form-label">描述</view>
+          <textarea
+            class="form-textarea"
+            value="{{formDescription}}"
+            placeholder="描述一下你的愿望（可选）"
+            bindinput="onDescriptionInput"
+            auto-height
+          />
+        </view>
+        <view class="form-item">
+          <view class="form-label">优先级</view>
+          <view class="segmented-control">
+            <view
+              class="segment {{formPriority === 'high' ? 'active' : ''}}"
+              data-value="high"
+              bindtap="onPriorityChange"
+            >🔴 高</view>
+            <view
+              class="segment {{formPriority === 'medium' ? 'active' : ''}}"
+              data-value="medium"
+              bindtap="onPriorityChange"
+            >🟡 中</view>
+            <view
+              class="segment {{formPriority === 'low' ? 'active' : ''}}"
+              data-value="low"
+              bindtap="onPriorityChange"
+            >🟢 低</view>
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-label">已实现</view>
+          <view class="toggle-row" bindtap="onAchievedToggle">
+            <view class="toggle-switch {{formAchieved ? 'on' : ''}}">
+              <view class="toggle-knob"></view>
+            </view>
+            <text class="toggle-label">{{formAchieved ? '已实现' : '未实现'}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="form-actions">
+        <button class="btn-cancel" size="medium" bindtap="onClosePopup">取消</button>
+        <button class="btn-save" size="medium" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Delete Dialog -->
+  <view class="dialog-mask" wx:if="{{showDeleteDialog}}" bindtap="onCancelDelete">
+    <view class="dialog-box" catchtap="noop">
+      <view class="dialog-icon">🗑️</view>
+      <view class="dialog-title">确认删除</view>
+      <view class="dialog-content">确定要删除这个愿望吗？此操作不可撤销。</view>
+      <view class="dialog-actions">
+        <button class="btn-cancel" bindtap="onCancelDelete">取消</button>
+        <button class="btn-delete" bindtap="onConfirmDelete">删除</button>
+      </view>
+    </view>
+  </view>
+</view>

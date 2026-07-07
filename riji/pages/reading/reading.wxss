@@ -1,0 +1,17 @@
+.reading-page { padding-bottom: 80px; }
+.reading-list { padding: 8px 0; }
+.reading-card { margin: 4px 16px; padding: 12px 16px; }
+.reading-card-header { display: flex; justify-content: space-between; align-items: center; }
+.reading-title { font-size: 16px; font-weight: 600; color: var(--color-text); }
+.reading-status { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: var(--color-highlight); color: var(--color-primary); }
+.reading-author { font-size: 14px; color: var(--color-text-muted); margin-top: 4px; }
+.reading-rating { margin-top: 4px; }
+.star { font-size: 18px; color: var(--color-border); }
+.star.filled { color: var(--color-warning); }
+.reading-notes-preview { font-size: 12px; color: var(--color-text-muted); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.segmented-control { display: flex; background: var(--color-bg); border-radius: 8px; padding: 3px; }
+.segment { flex: 1; text-align: center; padding: 8px 0; font-size: 14px; color: var(--color-text-muted); border-radius: 6px; }
+.segment.active { background: var(--color-card); color: var(--color-primary); font-weight: 600; }
+.rating-stars { display: flex; gap: 4px; }
+.rating-star { font-size: 24px; color: var(--color-border); }
+.rating-star.filled { color: var(--color-warning); }

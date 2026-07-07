@@ -1,0 +1,14 @@
+.page { padding: 16px; padding-bottom: 80px; }
+.habit-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--color-card); border-radius: 8px; margin-bottom: 6px; }
+.habit-info { display: flex; align-items: center; gap: 10px; }
+.habit-icon { font-size: 22px; }
+.habit-name { font-size: 14px; color: var(--color-text); }
+.habit-btns { display: flex; gap: 12px; }
+.habit-edit, .habit-del { font-size: 16px; padding: 4px; }
+.add-btn { text-align: center; padding: 12px; color: var(--color-primary); font-size: 14px; border: 1px dashed var(--color-primary); border-radius: 8px; margin-top: 12px; }
+.icon-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.icon-item { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 6px; background: var(--color-bg); }
+.icon-item.sel { background: var(--color-highlight); border: 2px solid var(--color-primary); }
+.empty-state { text-align: center; padding: 40px 20px; }
+.empty-icon { font-size: 48px; display: block; margin-bottom: 8px; }
+.empty-text { font-size: 14px; color: var(--color-text-muted); }
